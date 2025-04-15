@@ -1,14 +1,11 @@
 {
-  "name": "maplibre-gl",
+  "name": "@peoplegis/maplibre-gl",
   "description": "BSD licensed community fork of mapbox-gl, a WebGL interactive maps library",
   "version": "1.15.3",
   "main": "dist/maplibre-gl.js",
   "style": "dist/maplibre-gl.css",
   "license": "BSD-3-Clause",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/maplibre/maplibre-gl-js.git"
-  },
+  "repository": "https://github.com/peoplegis/mapbox-gl-js.git",
   "engines": {
     "node": ">=6.4.0"
   },
@@ -52,7 +49,7 @@
     "babelify": "^10.0.0",
     "benchmark": "^2.1.4",
     "browserify": "^16.5.0",
-    "canvas": "^2.6.1",
+    "canvas": "^2.11.2",
     "chalk": "^3.0.0",
     "chokidar": "^3.0.2",
     "cross-env": "^7.0.3",
@@ -174,6 +171,8 @@
     "dist/style-spec/",
     "flow-typed/*.js",
     "src/",
-    ".flowconfig"
+    ".flowconfig",
+    "geojson.d.ts",
+    "mapbox-gl.d.ts"
   ]
 }

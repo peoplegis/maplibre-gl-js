@@ -119,6 +119,19 @@ export type RasterDEMSourceSpecification = {
     "volatile"?: boolean
 }
 
+export type TilecacheSourceSpecification = {
+    "type": "tilecache",
+    "url"?: string,
+    "tiles"?: Array<string>,
+    "bounds"?: [number, number, number, number],
+    "minzoom"?: number,
+    "maxzoom"?: number,
+    "tileSize"?: number,
+    "scheme"?: "xyz",
+    "attribution"?: string,
+    "volatile"?: boolean
+}
+
 export type GeoJSONSourceSpecification = {|
     "type": "geojson",
     "data"?: mixed,
