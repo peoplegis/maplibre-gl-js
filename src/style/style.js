@@ -1248,9 +1248,16 @@ class Style extends Evented {
         this.sourceCaches[id].reload();
     }
 
-    _updateSources(transform: Transform) {
+    _updateSources(transform: Transform, sources?: boolean | string[]) {
         for (const id in this.sourceCaches) {
-            this.sourceCaches[id].update(transform);
+            const sourceCache = this.sourceCaches[id];
+            const reloadTiles = (sources === true && sourceCache.isVolatile) || (Array.isArray(sources) && sources.includes(id));
+
+            if (reloadTiles && !sourceCache.isVolatile) {
+                console.warn('Cannot reload tiles for non-volatile source.');
+            }
+
+            sourceCache.update(transform, reloadTiles && sourceCache.isVolatile);
         }
     }
 

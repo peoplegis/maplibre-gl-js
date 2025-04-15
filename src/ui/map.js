@@ -2421,11 +2421,12 @@ class Map extends Camera {
      * - A transition is in progress
      *
      * @param {number} paintStartTimeStamp  The time when the animation frame began executing.
+     * @param {string[]} sources  Volatile sources to update during rerender.
      *
      * @returns {Map} this
      * @private
      */
-    _render(paintStartTimeStamp: number) {
+    _render(paintStartTimeStamp: number, sources?: boolean | string[]) {
         let gpuTimer, frameStartTime = 0;
         const extTimerQuery = this.painter.context.extTimerQuery;
         if (this.listens('gpu-timing-frame')) {
@@ -2475,7 +2476,7 @@ class Map extends Camera {
         // need for the current transform
         if (this.style && this._sourcesDirty) {
             this._sourcesDirty = false;
-            this.style._updateSources(this.transform);
+            this.style._updateSources(this.transform, sources);
         }
 
         this._placementDirty = this.style && this.style._updatePlacement(this.painter.transform, this.showCollisionBoxes, this._fadeDuration, this._crossSourceCollisions);
@@ -2615,6 +2616,25 @@ class Map extends Camera {
                 PerformanceUtils.frame(paintStartTimeStamp);
                 this._frame = null;
                 this._render(paintStartTimeStamp);
+            });
+        }
+    }
+
+    /**
+     * Trigger the rendering of a single frame. Use this method with volatile sources to
+     * rerender the map when the source data changes. Calling this multiple times before the
+     * next frame is rendered will still result in only a single frame being rendered.
+     * * @param {string[]} sources to update as part of render
+     * @example
+     * map.triggerRerender();
+     */
+    triggerRerender(sources?: string[]) {
+        if (this.style && !this._frame) {
+            this._frame = browser.frame((paintStartTimeStamp: number) => {
+                PerformanceUtils.frame(paintStartTimeStamp);
+                this._frame = null;
+                this._sourcesDirty = true;
+                this._render(paintStartTimeStamp, Array.isArray(sources) ? sources : true);
             });
         }
     }
