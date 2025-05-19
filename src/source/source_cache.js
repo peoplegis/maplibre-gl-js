@@ -484,8 +484,6 @@ class SourceCache extends Evented {
 
         // We want to reload all tiles to react to a change in the source data
         if (reloadTiles) {
-            // eslint-disable-next-line no-debugger
-            debugger;
             this.clearTiles();
         }
 

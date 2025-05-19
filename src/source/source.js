@@ -83,6 +83,7 @@ type SourceStatics = {
 
 export type SourceClass = Class<Source> & SourceStatics;
 
+import beacon from '../source/beacon_source';
 import vector from '../source/vector_tile_source';
 import raster from '../source/raster_tile_source';
 import rasterDem from '../source/raster_dem_tile_source';
@@ -95,6 +96,7 @@ import canvas from '../source/canvas_source';
 import type {SourceSpecification} from '../style-spec/types';
 
 const sourceTypes = {
+    beacon,
     vector,
     raster,
     'raster-dem': rasterDem,

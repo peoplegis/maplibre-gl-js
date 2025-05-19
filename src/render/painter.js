@@ -48,7 +48,8 @@ const draw = {
     raster,
     background,
     debug,
-    custom
+    custom,
+    beacon: raster
 };
 
 import type Transform from '../geo/transform';

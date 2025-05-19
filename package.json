@@ -2,7 +2,7 @@
   "name": "@peoplegis/maplibre-gl",
   "description": "BSD licensed community fork of mapbox-gl, a WebGL interactive maps library",
   "version": "1.15.3",
-  "main": "dist/maplibre-gl.js",
+  "main": "dist/maplibre-gl-dev.js",
   "style": "dist/maplibre-gl.css",
   "license": "BSD-3-Clause",
   "repository": "https://github.com/peoplegis/mapbox-gl-js.git",

@@ -80,6 +80,19 @@ export type LightSpecification = {|
     "intensity"?: PropertyValueSpecification<number>
 |}
 
+export type BeaconSourceSpecification = {
+    "type": "beacon",
+    "url"?: string,
+    "tiles"?: Array<string>,
+    "bounds"?: [number, number, number, number],
+    "minzoom"?: number,
+    "maxzoom"?: number,
+    "tileSize"?: number,
+    "scheme"?: "xyz" | "tms",
+    "attribution"?: string,
+    "volatile"?: boolean
+}
+
 export type VectorSourceSpecification = {
     "type": "vector",
     "url"?: string,

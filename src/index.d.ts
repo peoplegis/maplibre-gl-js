@@ -1190,7 +1190,8 @@ declare namespace maplibregl {
         | CanvasSourceRaw
         | VectorSource
         | RasterSource
-        | RasterDemSource;
+        | RasterDemSource
+        | BeaconSource;
 
     interface VectorSourceImpl extends VectorSource {
         /**
@@ -1220,7 +1221,7 @@ declare namespace maplibregl {
         | RasterDemSource;
 
     export interface Source {
-        type: 'vector' | 'raster' | 'raster-dem' | 'geojson' | 'image' | 'video' | 'canvas';
+        type: 'vector' | 'raster' | 'raster-dem' | 'geojson' | 'image' | 'video' | 'canvas' | 'beacon';
     }
 
     /**
@@ -1359,6 +1360,19 @@ declare namespace maplibregl {
         animate?: boolean;
 
         canvas: string | HTMLCanvasElement;
+    }
+
+    interface BeaconSource extends Source {
+        type: 'beacon';
+        url?: string;
+        tiles?: string[];
+        bounds?: number[];
+        imageType?: 'jpeg' | 'png';
+        minzoom?: number;
+        maxzoom?: number;
+        projection: string;
+        tileOrigin: [number, number];
+        tileSize?: number;
     }
 
     interface VectorSource extends Source {
@@ -2007,6 +2021,12 @@ declare namespace maplibregl {
         paint?: BackgroundPaint;
     }
 
+    interface BeaconLayer extends Layer {
+        type: 'beacon';
+        layout?: RasterLayout;
+        paint?: RasterPaint;
+    }
+
     interface CircleLayer extends Layer {
         type: 'circle';
         layout?: CircleLayout;
@@ -2057,6 +2077,7 @@ declare namespace maplibregl {
 
     export type AnyLayer =
         | BackgroundLayer
+        | BeaconLayer
         | CircleLayer
         | FillExtrusionLayer
         | FillLayer

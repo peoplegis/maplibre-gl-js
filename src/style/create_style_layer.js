@@ -23,7 +23,8 @@ const subclasses = {
     line,
     symbol,
     background,
-    raster
+    raster,
+    beacon: raster
 };
 
 export default function createStyleLayer(layer: LayerSpecification | CustomLayerInterface) {
