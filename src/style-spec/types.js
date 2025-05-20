@@ -87,8 +87,9 @@ export type BeaconSourceSpecification = {
     "bounds"?: [number, number, number, number],
     "minzoom"?: number,
     "maxzoom"?: number,
+    "reproject": (coordinates: [number, number]) => [number, number],
+    "resolutions": number[],
     "tileSize"?: number,
-    "scheme"?: "xyz" | "tms",
     "attribution"?: string,
     "volatile"?: boolean
 }

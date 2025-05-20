@@ -1,7 +1,8 @@
 // @flow
 
-import {extend, pick} from '../util/util';
+import {getTileBBox} from '@mapbox/whoots-js';
 
+import {extend, pick} from '../util/util';
 import {getImage, ResourceType} from '../util/ajax';
 import {Event, ErrorEvent, Evented} from '../util/evented';
 import loadTileJSON from './load_tilejson';
@@ -28,7 +29,6 @@ class BeaconSource extends Evented implements Source {
     minzoom: number;
     maxzoom: number;
     url: string;
-    scheme: string;
     tileSize: number;
 
     bounds: ?[number, number, number, number];
@@ -36,6 +36,8 @@ class BeaconSource extends Evented implements Source {
     roundZoom: boolean;
     dispatcher: Dispatcher;
     map: Map;
+    reproject: (coordinates: [number, number]) => [number, number];
+    resolutions: Array<number>;
     tiles: Array<string>;
 
     _loaded: boolean;
@@ -52,12 +54,11 @@ class BeaconSource extends Evented implements Source {
         this.minzoom = 0;
         this.maxzoom = 22;
         this.roundZoom = true;
-        this.scheme = 'xyz';
         this.tileSize = 512;
         this._loaded = false;
 
         this._options = extend({type: 'beacon'}, options);
-        extend(this, pick(options, ['url', 'scheme', 'tileSize', 'maxzoom', 'minzoom']));
+        extend(this, pick(options, ['url', 'tileSize', 'maxzoom', 'minzoom', 'reproject', 'resolutions', 'tileOrigin']));
     }
 
     load() {
@@ -109,7 +110,24 @@ class BeaconSource extends Evented implements Source {
     }
 
     loadTile(tile: Tile, callback: Callback<void>) {
-        const url = this.map._requestManager.normalizeTileURL(tile.tileID.canonical.url(this.tiles, this.scheme), this.tileSize);
+        const z = Math.max(Math.min(Math.max(Math.floor(this.map.getZoom()), this.minzoom) - 1, this.maxzoom), 0);
+        const resolution = this.resolutions[z];
+
+        const bounds = getTileBBox(tile.tileID.canonical.x, tile.tileID.canonical.y, tile.tileID.canonical.z)
+            .split(',')
+            .map(value => parseFloat(value));
+
+        const southwest = this.reproject(bounds.slice(0, 2));
+        const northeast = this.reproject(bounds.slice(2));
+
+        const left = southwest[0];
+        const top = northeast[1];
+        const x = Math.round((left - this.tileOrigin[0]) / (resolution * this.tileSize));
+        const y = Math.round((this.tileOrigin[1] - top) / (resolution * this.tileSize));
+
+        const rawUrl = this.map._requestManager.normalizeTileURL(tile.tileID.canonical.url(this.tiles, this.scheme), this.tileSize);
+        const url = `${rawUrl}/${z}/${y}/${x}`;
+
         tile.request = getImage(this.map._requestManager.transformRequest(url, ResourceType.Tile), (err, img) => {
             delete tile.request;
 

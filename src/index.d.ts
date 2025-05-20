@@ -1370,7 +1370,8 @@ declare namespace maplibregl {
         imageType?: 'jpeg' | 'png';
         minzoom?: number;
         maxzoom?: number;
-        projection: string;
+        reproject: (coordinates: [number, number]) => [number, number];
+        resolutions: number[];
         tileOrigin: [number, number];
         tileSize?: number;
     }
